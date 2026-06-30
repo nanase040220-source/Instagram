@@ -15,12 +15,12 @@
 
       <form class="login-form" action="/login" method="POST">
         <div class="input-field">
-          <input type="text" name="username" id="username" required placeholder=" ">
+          <input type="text" name="username" id="username" autocomplete="username" required placeholder=" ">
           <span class="placeholder-text">電話番号、ユーザーネーム、メールアドレス</span>
         </div>
         
         <div class="input-field">
-          <input type="password" name="password" id="password" required placeholder=" ">
+          <input type="password" name="password" id="password" autocomplete="current-password" required placeholder=" ">
           <span class="placeholder-text">パスワード</span>
         </div>
         
@@ -34,7 +34,7 @@
       </div>
 
       <div class="other-links">
-        <button class="fb-login-btn">
+        <button type="button" class="fb-login-btn">
           <i class="fab fa-facebook-square"></i> Facebookでログイン
         </button>
         <a href="#" class="forgot-password">パスワードを忘れた場合</a>

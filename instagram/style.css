@@ -1,5 +1,5 @@
 /* ==========================================================================
-   1. 全体のリセット & Meta仕様ベース設定
+   1. 全体のベース設定 & Meta仕様のフォント平滑化
    ========================================================================== */
 * {
   margin: 0;
@@ -8,8 +8,8 @@
 }
 
 body {
-  /* 本家と全く同じフォントスタック。文字の太さや滑らかさをネイティブに再現 */
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  /* 本家必須：文字の線を細くシャープに見せるアンチエイリアス */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: rgb(250, 250, 250);
@@ -20,42 +20,38 @@ body {
   min-height: 100vh;
 }
 
-/* 中央配置コンテナ */
 .container {
   width: 100%;
   max-width: 350px;
   display: flex;
   flex-direction: column;
-  gap: 10px; /* 本家のボックス間の距離 */
+  gap: 10px;
 }
 
 /* ==========================================================================
-   2. メインログインボックス（本家の境界線と余白を完全再現）
+   2. ログインカード & 本物のロゴ画像埋め込み
    ========================================================================== */
 .login-box {
-  background-color: rgb(255, 255, 255);
-  /* 本家は薄いグレーの1px境界線 */
+  background-color: #ffffff;
   border: 1px solid rgb(219, 219, 219);
   border-radius: 1px;
-  /* 本家の正確なパディング：上部36px、左右40px、下部20px */
   padding: 36px 40px 20px 40px;
   text-align: center;
 }
 
-/* ロゴの再現度向上（フォント指定がGeorgiaの場合の限界値） */
-.logo {
-  font-family: 'Georgia', serif;
-  font-style: italic;
-  font-size: 47px;
-  font-weight: 500;
-  letter-spacing: -1px;
-  margin: 22px 0 34px 0; /* 本家のロゴの空気感を出すマージン */
-  color: rgb(0, 0, 0);
-  user-select: none;
+/* 本物のInstagramロゴ（スプライト画像）を表示 */
+.logo-img {
+  height: 51px;
+  width: 175px;
+  margin: 22px auto 34px auto;
+  background-image: url('https://www.instagram.com/static/images/web/logged_out_wordmark.png/7a6b93ad40e6.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 /* ==========================================================================
-   3. フォーム & 入力フィールド（本家のタイトなサイズ感）
+   3. 【劇的変化】入力欄と文字が浮き上がるアニメーション
    ========================================================================== */
 .login-form {
   display: flex;
@@ -64,71 +60,77 @@ body {
 }
 
 .input-field {
-  width: 100%;
   position: relative;
+  width: 100%;
+  height: 36px; /* 本家の正確なサイズ */
 }
 
 .input-field input {
   width: 100%;
-  /* 本家の入力欄は高さ36px。パディングとフォントサイズを厳密化 */
-  height: 36px;
-  padding: 9px 8px 7px 8px;
+  height: 100%;
+  /* 文字入力時に下に余白を作ってラベルと被らせない */
+  padding: 14px 0 2px 8px;
   background-color: rgb(250, 250, 250);
   border: 1px solid rgb(219, 219, 219);
   border-radius: 3px;
   font-size: 12px;
   color: rgb(38, 38, 38);
   outline: none;
-  text-overflow: ellipsis;
   transition: border-color 0.1s ease;
 }
 
-/* プレースホルダーの文字色を本家のトーン（少し薄めのグレー）に */
-.input-field input::placeholder {
-  color: rgb(142, 142, 142);
-  font-size: 12px;
-}
-
-/* フォーカスした時の本家の挙動（境界線が少し暗くなる） */
 .input-field input:focus {
   border-color: rgb(168, 168, 168);
 }
 
+/* 擬似プレースホルダーテキストの初期配置（中央） */
+.input-field .placeholder-text {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgb(142, 142, 142);
+  font-size: 12px;
+  pointer-events: none;
+  transition: transform 0.1s ease, font-size 0.1s ease, top 0.1s ease;
+  transform-origin: left top;
+  /* 文字が長すぎるときに三点リーダーにする */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: calc(100% - 16px);
+  text-align: left;
+}
+
+/* 【本家再現】フォーカス時、または文字が入力されている時にラベルを上へ小さく移動 */
+.input-field input:focus ~ .placeholder-text,
+.input-field input:not(:placeholder-shown) ~ .placeholder-text {
+  top: 11px;
+  font-size: 10px;
+  transform: translateY(-50%);
+}
+
 /* ==========================================================================
-   4. ログインボタン（チープさを消すソリッド設計）
+   4. ボタン・セパレーター・リンクの精密調整
    ========================================================================== */
 .submit-btn {
   width: 100%;
-  /* 本家の新規ログイン画面で採用されている鮮やかなブルー */
   background-color: rgb(0, 149, 246);
-  color: rgb(255, 255, 255);
+  color: #ffffff;
   border: none;
-  border-radius: 8px; /* 現行の少し丸みのあるモダンな角丸 */
-  height: 32px;       /* 32px固定にすることで劇的に本物感が出ます */
+  border-radius: 8px;
+  height: 32px;
   font-size: 14px;
   font-weight: 600;
-  letter-spacing: -0.1px;
   cursor: pointer;
   margin-top: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   transition: background-color 0.1s ease;
 }
 
-/* 本家のホバー時のカラーコード */
 .submit-btn:hover {
   background-color: rgb(24, 119, 242);
 }
 
-/* クリックした瞬間のわずかな不透明度の変化 */
-.submit-btn:active {
-  opacity: 0.85;
-}
-
-/* ==========================================================================
-   5. セパレーター（または）
-   ========================================================================== */
 .separator {
   display: flex;
   align-items: center;
@@ -146,12 +148,8 @@ body {
   font-size: 12px;
   font-weight: 600;
   padding: 0 18px;
-  letter-spacing: 0.5px;
 }
 
-/* ==========================================================================
-   6. 外部リンク・Facebookログイン（マージンとフォントの徹底調整）
-   ========================================================================== */
 .other-links {
   display: flex;
   flex-direction: column;
@@ -162,54 +160,36 @@ body {
 .fb-login-btn {
   background: none;
   border: none;
-  color: rgb(56, 81, 133); /* Facebookの公式カラー */
+  color: rgb(56, 81, 133);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  letter-spacing: -0.1px;
 }
 
-/* アイコンとテキストの絶妙な間隔 */
 .fb-login-btn i {
   font-size: 16px;
   margin-right: 8px;
 }
 
-.fb-login-btn:hover {
-  opacity: 0.9;
-}
-
-/* パスワードを忘れた場合（フォントサイズと色調の完全同期） */
 .forgot-password {
   color: rgb(0, 55, 107);
   font-size: 12px;
   text-decoration: none;
-  letter-spacing: -0.1px;
-  margin-top: 4px;
-}
-
-.forgot-password:hover {
-  text-decoration: none;
 }
 
 /* ==========================================================================
-   7. 下部登録ボックス
+   5. 下部登録ボックス & スマホ対応
    ========================================================================== */
 .signup-box {
-  background-color: rgb(255, 255, 255);
+  background-color: #ffffff;
   border: 1px solid rgb(219, 219, 219);
   border-radius: 1px;
   padding: 21px;
   text-align: center;
   font-size: 14px;
-  letter-spacing: -0.1px;
-}
-
-.signup-box p {
-  color: rgb(38, 38, 38);
 }
 
 .signup-box a {
@@ -218,22 +198,13 @@ body {
   font-weight: 600;
 }
 
-/* ==========================================================================
-   8. モバイルレスポンシブ（本家完全準拠）
-   ========================================================================== */
 @media (max-width: 450px) {
   body {
-    background-color: rgb(255, 255, 255); /* スマホ表示では背景を完全な白に */
+    background-color: #ffffff;
   }
-  .container {
-    padding: 0;
-  }
-  /* スマホ版では外枠のボーダーを消し、背景を透過にするのがInstagram公式の挙動 */
   .login-box, .signup-box {
     border: none;
     background-color: transparent;
-  }
-  .login-box {
-    padding: 44px 40px 20px 40px;
+    padding: 20px;
   }
 }
